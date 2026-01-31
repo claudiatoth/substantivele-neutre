@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Test Final - Genul Neutru | Claudia Toth</title>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* ========== PROGRESS BAR ========== */
+        .progress-container {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .progress-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .progress-text {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .level-badge {
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        /* ========== MAIN CONTAINER ========== */
+        .container {
+            flex: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            width: 100%;
+        }
+        
+        /* ========== QUESTION CARD ========== */
+        .question-card {
+            background: white;
+            border-radius: 16px;
+            padding: 50px 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            margin-bottom: 20px;
+            min-height: 400px;
+            display: none;
+        }
+        
+        .question-card.active {
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .question-text {
+            font-size: 24px;
+            color: #1f2937;
+            margin-bottom: 35px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        
+        /* ========== INPUT TEXT ========== */
+        .input-answer {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 18px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+        
+        .input-answer:focus {
+            outline: none;
+            border-color: #10b981;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        
+        /* ========== RADIO OPTIONS ========== */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            position: relative;
+        }
+        
+        .option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+        
+        .option label {
+            display: block;
+            padding: 20px 24px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 17px;
+            color: #374151;
+        }
+        
+        .option input[type="radio"]:checked + label {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+            font-weight: 500;
+        }
+        
+        .option label:hover {
+            background: #f0fdf4;
+            border-color: #10b981;
+        }
+        
+        /* ========== NAVIGATION BUTTONS ========== */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: auto;
+            padding-top: 30px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: #f0fdf4;
+        }
+        
+        .btn-secondary:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background: #10b981;
+            color: white;
+            border: 2px solid #10b981;
+        }
+        
+        .btn-primary:hover {
+            background: #059669;
+            border-color: #059669;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-large {
+            padding: 16px 36px;
+            font-size: 18px;
+        }
+        
+        /* ========== RESULTS SCREEN ========== */
+        .results-card {
+            background: white;
+            border-radius: 16px;
+            padding: 60px 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            text-align: center;
+            display: none;
+        }
+        
+        .results-card.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .results-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .results-title {
+            font-size: 36px;
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .results-score {
+            font-size: 64px;
+            color: #10b981;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .results-score.fail {
+            color: #ef4444;
+        }
+        
+        .results-percentage {
+            font-size: 32px;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+        
+        .results-message {
+            font-size: 18px;
+            color: #6b7280;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .results-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* ========== FOOTER ========== */
+        .footer {
+            background: white;
+            padding: 30px 20px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            border-top: 1px solid #e5e7eb;
+            margin-top: auto;
+        }
+        
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .question-card {
+                padding: 30px 20px;
+                min-height: 350px;
+            }
+            
+            .question-text {
+                font-size: 20px;
+            }
+            
+            .results-card {
+                padding: 40px 20px;
+            }
+            
+            .results-score {
+                font-size: 48px;
+            }
+            
+            .btn-large {
+                padding: 14px 24px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== PROGRESS BAR ========== -->
+    <div class="progress-container">
+        <div class="progress-content">
+            <div class="progress-text">
+                <span id="progressText">Întrebarea 1 din 30</span>
+                <span class="level-badge">GENUL NEUTRU</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 3.33%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MAIN CONTAINER ========== -->
+    <div class="container">
+
+        <!-- ========================================== -->
+        <!-- NIVEL A1 - ÎNTREBĂRI SIMPLE (1-12) -->
+        <!-- ========================================== -->
+
+        <!-- Q1: Input - Articol simplu -->
+        <div class="question-card active" data-question="1" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează cu articolul corect:<br><br>
+                <strong>___ Mädchen</strong> spielt im Garten.
+            </div>
+            <input type="text" class="input-answer" id="answer-1" placeholder="Scrie articolul (der/die/das)">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()" disabled>← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q2: Input - Articol simplu -->
+        <div class="question-card" data-question="2" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează cu articolul corect:<br><br>
+                Ich gehe ins <strong>___ Museum</strong>.
+            </div>
+            <input type="text" class="input-answer" id="answer-2" placeholder="Scrie articolul">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q3: Radio - Identifică terminația -->
+        <div class="question-card" data-question="3" data-type="radio" data-answer="das">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Brötchen</strong>?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q3-a" name="q3" value="der">
+                    <label for="q3-a">der Brötchen</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q3-b" name="q3" value="die">
+                    <label for="q3-b">die Brötchen</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q3-c" name="q3" value="das">
+                    <label for="q3-c">das Brötchen</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q4: Input -->
+        <div class="question-card" data-question="4" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează:<br><br>
+                <strong>___ Hotel</strong> ist sehr schön.
+            </div>
+            <input type="text" class="input-answer" id="answer-4" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q5: Radio - Terminație -ment -->
+        <div class="question-card" data-question="5" data-type="radio" data-answer="das">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Dokument</strong>?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q5-a" name="q5" value="der">
+                    <label for="q5-a">der Dokument</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q5-b" name="q5" value="die">
+                    <label for="q5-b">die Dokument</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q5-c" name="q5" value="das">
+                    <label for="q5-c">das Dokument</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q6: Input -->
+        <div class="question-card" data-question="6" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează:<br><br>
+                <strong>___ Thema</strong> ist sehr interessant.
+            </div>
+            <input type="text" class="input-answer" id="answer-6" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q7: Radio - Terminație -ett -->
+        <div class="question-card" data-question="7" data-type="radio" data-answer="das">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Ballett</strong>?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q7-a" name="q7" value="der">
+                    <label for="q7-a">der Ballett</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q7-b" name="q7" value="die">
+                    <label for="q7-b">die Ballett</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q7-c" name="q7" value="das">
+                    <label for="q7-c">das Ballett</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q8: Input -->
+        <div class="question-card" data-question="8" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează:<br><br>
+                <strong>___ Zentrum</strong> der Stadt ist sehr groß.
+            </div>
+            <input type="text" class="input-answer" id="answer-8" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q9: Radio -->
+        <div class="question-card" data-question="9" data-type="radio" data-answer="das">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Fräulein</strong>?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q9-a" name="q9" value="der">
+                    <label for="q9-a">der Fräulein</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q9-b" name="q9" value="die">
+                    <label for="q9-b">die Fräulein</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q9-c" name="q9" value="das">
+                    <label for="q9-c">das Fräulein</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q10: Input -->
+        <div class="question-card" data-question="10" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează:<br><br>
+                Wir gehen ins <strong>___ Kino</strong>.
+            </div>
+            <input type="text" class="input-answer" id="answer-10" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q11: Radio - Terminație -ma -->
+        <div class="question-card" data-question="11" data-type="radio" data-answer="das">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Drama</strong>?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q11-a" name="q11" value="der">
+                    <label for="q11-a">der Drama</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q11-b" name="q11" value="die">
+                    <label for="q11-b">die Drama</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q11-c" name="q11" value="das">
+                    <label for="q11-c">das Drama</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q12: Input -->
+        <div class="question-card" data-question="12" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează:<br><br>
+                <strong>___ Instrument</strong> ist sehr teuer.
+            </div>
+            <input type="text" class="input-answer" id="answer-12" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- NIVEL A2 - ÎNTREBĂRI MEDII (13-24) -->
+        <!-- ========================================== -->
+
+        <!-- Q13: Radio - Excepție! -->
+        <div class="question-card" data-question="13" data-type="radio" data-answer="der">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Raum</strong> (camera, spațiul)?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q13-a" name="q13" value="der">
+                    <label for="q13-a">der Raum</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q13-b" name="q13" value="die">
+                    <label for="q13-b">die Raum</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q13-c" name="q13" value="das">
+                    <label for="q13-c">das Raum</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q14: Input - Propoziție -->
+        <div class="question-card" data-question="14" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează în propoziție:<br><br>
+                Ich esse <strong>___ Brötchen</strong> zum Frühstück.
+            </div>
+            <input type="text" class="input-answer" id="answer-14" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q15: Radio - Excepție! -->
+        <div class="question-card" data-question="15" data-type="radio" data-answer="die">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Erlaubnis</strong> (permisiunea)?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q15-a" name="q15" value="der">
+                    <label for="q15-a">der Erlaubnis</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q15-b" name="q15" value="die">
+                    <label for="q15-b">die Erlaubnis</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q15-c" name="q15" value="das">
+                    <label for="q15-c">das Erlaubnis</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q16: Input -->
+        <div class="question-card" data-question="16" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează:<br><br>
+                <strong>___ Ergebnis</strong> der Prüfung ist sehr gut.
+            </div>
+            <input type="text" class="input-answer" id="answer-16" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q17: Radio - Excepție! -->
+        <div class="question-card" data-question="17" data-type="radio" data-answer="der">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Baum</strong> (copacul)?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q17-a" name="q17" value="der">
+                    <label for="q17-a">der Baum</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q17-b" name="q17" value="die">
+                    <label for="q17-b">die Baum</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q17-c" name="q17" value="das">
+                    <label for="q17-c">das Baum</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q18: Input - Propoziție -->
+        <div class="question-card" data-question="18" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează în propoziție:<br><br>
+                Wir besuchen <strong>___ Museum</strong> am Samstag.
+            </div>
+            <input type="text" class="input-answer" id="answer-18" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q19: Radio - Excepție! -->
+        <div class="question-card" data-question="19" data-type="radio" data-answer="der">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Stahl</strong> (oțelul)?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q19-a" name="q19" value="der">
+                    <label for="q19-a">der Stahl</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q19-b" name="q19" value="die">
+                    <label for="q19-b">die Stahl</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q19-c" name="q19" value="das">
+                    <label for="q19-c">das Stahl</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q20: Input -->
+        <div class="question-card" data-question="20" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează:<br><br>
+                <strong>___ Geheimnis</strong> bleibt ein Geheimnis.
+            </div>
+            <input type="text" class="input-answer" id="answer-20" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q21: Radio - Excepție! -->
+        <div class="question-card" data-question="21" data-type="radio" data-answer="der">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Irrtum</strong> (eroarea)?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q21-a" name="q21" value="der">
+                    <label for="q21-a">der Irrtum</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q21-b" name="q21" value="die">
+                    <label for="q21-b">die Irrtum</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q21-c" name="q21" value="das">
+                    <label for="q21-c">das Irrtum</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q22: Input - Propoziție -->
+        <div class="question-card" data-question="22" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează în propoziție:<br><br>
+                Sie spielt <strong>___ Klavier</strong> sehr gut. (Klavier = neutral!)
+            </div>
+            <input type="text" class="input-answer" id="answer-22" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q23: Radio -->
+        <div class="question-card" data-question="23" data-type="radio" data-answer="das">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Christentum</strong> (creștinismul)?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q23-a" name="q23" value="der">
+                    <label for="q23-a">der Christentum</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q23-b" name="q23" value="die">
+                    <label for="q23-b">die Christentum</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q23-c" name="q23" value="das">
+                    <label for="q23-c">das Christentum</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q24: Input - Propoziție -->
+        <div class="question-card" data-question="24" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează în propoziție:<br><br>
+                <strong>___ Tablett</strong> liegt auf dem Tisch.
+            </div>
+            <input type="text" class="input-answer" id="answer-24" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- NIVEL B1 - ÎNTREBĂRI AVANSATE (25-30) -->
+        <!-- ========================================== -->
+
+        <!-- Q25: Input - Infinitiv substantivizat -->
+        <div class="question-card" data-question="25" data-type="input" data-answer="das Lesen">
+            <div class="question-text">
+                Transformă în substantiv neutru:<br><br>
+                lesen (a citi) → <strong>___________</strong><br>
+                <small style="color: #6b7280;">(Scrie forma completă cu articol)</small>
+            </div>
+            <input type="text" class="input-answer" id="answer-25" placeholder="Ex: das Schreiben">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q26: Radio - Compus -->
+        <div class="question-card" data-question="26" data-type="radio" data-answer="das">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Arbeitszimmer</strong> (Arbeit + Zimmer)?<br>
+                <small style="color: #6b7280;">Ultimul element determină genul!</small>
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q26-a" name="q26" value="der">
+                    <label for="q26-a">der Arbeitszimmer</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q26-b" name="q26" value="die">
+                    <label for="q26-b">die Arbeitszimmer</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q26-c" name="q26" value="das">
+                    <label for="q26-c">das Arbeitszimmer</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q27: Input - Infinitiv substantivizat -->
+        <div class="question-card" data-question="27" data-type="input" data-answer="das Tanzen">
+            <div class="question-text">
+                Transformă în substantiv neutru:<br><br>
+                tanzen (a dansa) → <strong>___________</strong><br>
+                <small style="color: #6b7280;">(Scrie forma completă cu articol)</small>
+            </div>
+            <input type="text" class="input-answer" id="answer-27" placeholder="Ex: das Singen">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q28: Radio - Compus -->
+        <div class="question-card" data-question="28" data-type="radio" data-answer="das">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Schlafzimmer</strong> (Schlaf + Zimmer)?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q28-a" name="q28" value="der">
+                    <label for="q28-a">der Schlafzimmer</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q28-b" name="q28" value="die">
+                    <label for="q28-b">die Schlafzimmer</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q28-c" name="q28" value="das">
+                    <label for="q28-c">das Schlafzimmer</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q29: Input - Propoziție complexă -->
+        <div class="question-card" data-question="29" data-type="input" data-answer="das">
+            <div class="question-text">
+                Completează în propoziția complexă:<br><br>
+                Sie braucht <strong>___ Eigentum</strong>, um das Haus zu kaufen.
+            </div>
+            <input type="text" class="input-answer" id="answer-29" placeholder="der/die/das">
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Următoarea →</button>
+            </div>
+        </div>
+
+        <!-- Q30: Radio - Compus -->
+        <div class="question-card" data-question="30" data-type="radio" data-answer="das">
+            <div class="question-text">
+                Care articol este corect pentru <strong>Rathaus</strong> (Rat + Haus)?
+            </div>
+            <div class="options-container">
+                <div class="option">
+                    <input type="radio" id="q30-a" name="q30" value="der">
+                    <label for="q30-a">der Rathaus</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q30-b" name="q30" value="die">
+                    <label for="q30-b">die Rathaus</label>
+                </div>
+                <div class="option">
+                    <input type="radio" id="q30-c" name="q30" value="das">
+                    <label for="q30-c">das Rathaus</label>
+                </div>
+            </div>
+            <div class="navigation">
+                <button class="btn btn-secondary" onclick="prevQuestion()">← Înapoi</button>
+                <button class="btn btn-primary" onclick="nextQuestion()">Finalizează testul 🏆</button>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- RESULTS SCREEN -->
+        <!-- ========================================== -->
+        <div class="results-card" id="resultsCard">
+            <div class="results-icon" id="resultsIcon">🎉</div>
+            <h1 class="results-title" id="resultsTitle">Felicitări!</h1>
+            <div class="results-score" id="resultsScore">25/30</div>
+            <div class="results-percentage" id="resultsPercentage">83%</div>
+            <p class="results-message" id="resultsMessage">
+                Ai promovat testul! Cunoști foarte bine genul neutru în limba germană.
+            </p>
+            
+            <!-- FEEDBACK TYPEFORM BOX -->
+            <div style="background: #f0fdf4; border: 2px solid #10b981; border-radius: 12px; padding: 20px; margin: 30px 0; text-align: center;">
+                <p style="color: #065f46; font-size: 16px; margin-bottom: 15px; font-weight: 500;">
+                    📊 Cum ți s-a părut testul? Feedback-ul tău mă ajută să îmbunătățesc materialele!
+                </p>
+                <a href="https://yaz5dfqyx89.typeform.com/to/Gjbfu2WK" target="_blank" style="background: #10b981; color: white; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; transition: all 0.3s ease;">
+                    ✍️ Completează sondajul (2 minute)
+                </a>
+            </div>
+            
+            <div class="results-actions">
+                <button class="btn btn-primary btn-large" onclick="showReview()">📋 Vezi rezolvarea completă</button>
+                <button class="btn btn-secondary btn-large" onclick="location.reload()">↻ Refă testul</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <div class="footer">
+        <div style="font-size: 16px; color: #10b981; font-weight: bold; margin-bottom: 8px;">
+            ʚଓ Claudia Toth - Curs autorizat de limba germană
+        </div>
+        <div>
+            © 2026 Claudia Toth - Curs autorizat de limba germană
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 30;
+        const userAnswers = {};
+
+        // Update progress bar
+        function updateProgress() {
+            const percentage = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `Întrebarea ${currentQuestion} din ${totalQuestions}`;
+        }
+
+        // Show specific question
+        function showQuestion(num) {
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            const currentCard = document.querySelector(`[data-question="${num}"]`);
+            if (currentCard) {
+                currentCard.classList.add('active');
+            }
+            
+            updateProgress();
+        }
+
+        // Save answer
+        function saveAnswer(questionNum) {
+            const card = document.querySelector(`[data-question="${questionNum}"]`);
+            const type = card.dataset.type;
+            
+            if (type === 'input') {
+                const input = document.getElementById(`answer-${questionNum}`);
+                userAnswers[questionNum] = input ? input.value.trim() : '';
+            } else if (type === 'radio') {
+                const selected = card.querySelector('input[type="radio"]:checked');
+                userAnswers[questionNum] = selected ? selected.value : '';
+            }
+        }
+
+        // Next question
+        function nextQuestion() {
+            saveAnswer(currentQuestion);
+            
+            if (currentQuestion === totalQuestions) {
+                calculateResults();
+                return;
+            }
+            
+            currentQuestion++;
+            showQuestion(currentQuestion);
+        }
+
+        // Previous question
+        function prevQuestion() {
+            if (currentQuestion > 1) {
+                saveAnswer(currentQuestion);
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        // Calculate results
+        function calculateResults() {
+            let correct = 0;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const card = document.querySelector(`[data-question="${i}"]`);
+                const correctAnswer = card.dataset.answer;
+                const userAnswer = userAnswers[i] || '';
+                
+                if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                    correct++;
+                }
+            }
+            
+            const percentage = Math.round((correct / totalQuestions) * 100);
+            
+            // Hide all questions
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.style.display = 'none';
+            });
+            
+            // Show results
+            const resultsCard = document.getElementById('resultsCard');
+            resultsCard.classList.add('active');
+            
+            document.getElementById('resultsScore').textContent = `${correct}/${totalQuestions}`;
+            document.getElementById('resultsPercentage').textContent = `${percentage}%`;
+            
+            const scoreElement = document.getElementById('resultsScore');
+            
+            if (percentage >= 75) {
+                document.getElementById('resultsIcon').textContent = '🎉';
+                document.getElementById('resultsTitle').textContent = 'Felicitări!';
+                document.getElementById('resultsMessage').textContent = 'Ai promovat testul! Cunoști foarte bine genul neutru în limba germană.';
+                scoreElement.classList.remove('fail');
+            } else if (percentage >= 50) {
+                document.getElementById('resultsIcon').textContent = '📚';
+                document.getElementById('resultsTitle').textContent = 'Aproape!';
+                document.getElementById('resultsMessage').textContent = `Ai obținut ${percentage}%, dar nota de promovare este 75%. Revizuiește lecția și încearcă din nou!`;
+                scoreElement.classList.add('fail');
+            } else {
+                document.getElementById('resultsIcon').textContent = '💪';
+                document.getElementById('resultsTitle').textContent = 'Mai încearcă!';
+                document.getElementById('resultsMessage').textContent = 'Îți recomandăm să revizuiești lecția cu atenție și să încerci din nou testul.';
+                scoreElement.classList.add('fail');
+            }
+        }
+
+        // ========== SHOW REVIEW ==========
+        function showReview() {
+            // Save data BEFORE deleting cards from DOM
+            const questionsData = [];
+            for (let i = 1; i <= totalQuestions; i++) {
+                const card = document.querySelector(`[data-question="${i}"]`);
+                if (card) {
+                    const correctAnswer = card.dataset.answer;
+                    const questionText = card.querySelector('.question-text').innerHTML;
+                    const userAnswer = userAnswers[i] || '';
+                    const isCorrect = userAnswer.toLowerCase() === correctAnswer.toLowerCase();
+                    
+                    questionsData.push({
+                        number: i,
+                        question: questionText,
+                        userAnswer: userAnswer,
+                        correctAnswer: correctAnswer,
+                        isCorrect: isCorrect
+                    });
+                }
+            }
+            
+            // Hide results and progress
+            document.getElementById('resultsCard').style.display = 'none';
+            document.querySelector('.progress-container').style.display = 'none';
+            
+            // Create review container
+            const container = document.querySelector('.container');
+            container.innerHTML = '';
+            
+            // Add header
+            const header = document.createElement('div');
+            header.style.cssText = 'background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); margin-bottom: 30px; text-align: center;';
+            header.innerHTML = `
+                <h1 style="color: #10b981; font-size: 32px; margin-bottom: 10px;">📋 Rezolvarea completă</h1>
+                <p style="color: #6b7280; font-size: 18px;">Răspunsurile tale comparate cu răspunsurile corecte</p>
+            `;
+            container.appendChild(header);
+            
+            // Add each question review
+            questionsData.forEach(data => {
+                const reviewCard = document.createElement('div');
+                reviewCard.style.cssText = 'background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); margin-bottom: 20px;';
+                
+                reviewCard.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                        <div style="background: ${data.isCorrect ? '#d1fae5' : '#fee2e2'}; color: ${data.isCorrect ? '#065f46' : '#991b1b'}; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold;">
+                            ${data.isCorrect ? '✓' : '✗'}
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-size: 14px; color: #6b7280; margin-bottom: 5px;">Întrebarea ${data.number} din ${totalQuestions}</div>
+                            <div style="font-size: 20px; color: #1f2937;">${data.question}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
+                        <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">Răspunsul tău:</div>
+                        <div style="font-size: 18px; color: ${data.isCorrect ? '#10b981' : '#ef4444'}; font-weight: bold;">
+                            ${data.userAnswer || '(Nu ai răspuns)'}
+                        </div>
+                    </div>
+                    
+                    ${!data.isCorrect ? `
+                        <div style="background: #d1fae5; padding: 20px; border-radius: 12px; border: 2px solid #10b981;">
+                            <div style="font-size: 14px; color: #065f46; margin-bottom: 8px;">Răspunsul corect:</div>
+                            <div style="font-size: 18px; color: #065f46; font-weight: bold;">
+                                ${data.correctAnswer}
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+                
+                container.appendChild(reviewCard);
+            });
+            
+            // Add back buttons
+            const backButton = document.createElement('div');
+            backButton.style.cssText = 'text-align: center; margin-top: 40px; margin-bottom: 40px;';
+            backButton.innerHTML = `
+                <button class="btn btn-primary btn-large" onclick="location.reload()">↻ Refă testul</button>
+                <button class="btn btn-secondary btn-large" onclick="window.location.href='index.html'" style="margin-left: 15px;">← Înapoi la lecție</button>
+            `;
+            container.appendChild(backButton);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' && currentQuestion < totalQuestions) {
+                nextQuestion();
+            } else if (e.key === 'ArrowLeft' && currentQuestion > 1) {
+                prevQuestion();
+            }
+        });
+
+        // Initialize
+        showQuestion(1);
+    </script>
+
+</body>
+</html>
