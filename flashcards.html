@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Flashcards - Genul Neutru | Claudia Toth</title>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* ========== HEADER ========== */
+        .header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #10b981;
+        }
+        
+        .logo-icon {
+            font-size: 24px;
+        }
+        
+        .back-btn {
+            padding: 10px 20px;
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        
+        /* ========== CONTAINER ========== */
+        .container {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            width: 100%;
+        }
+        
+        /* ========== INFO BOX ========== */
+        .info-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .info-box h2 {
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+        
+        .info-box p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        /* ========== FLASHCARD ========== */
+        .flashcard-container {
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+        
+        .flashcard {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            cursor: pointer;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-face {
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        
+        .card-front {
+            transform: rotateY(0deg);
+        }
+        
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        
+        .german-word {
+            font-size: 48px;
+            font-weight: bold;
+            color: #10b981;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .romanian-word {
+            font-size: 32px;
+            color: #374151;
+            text-align: center;
+        }
+        
+        .termination-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        
+        .tap-hint {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        
+        /* ========== AUDIO BUTTON ========== */
+        .audio-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            z-index: 10;
+        }
+        
+        .audio-btn:hover {
+            background: #059669;
+            transform: scale(1.1);
+        }
+        
+        .audio-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* ========== PROGRESS ========== */
+        .progress-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .progress-text {
+            font-size: 18px;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        /* ========== NAVIGATION ========== */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .nav-btn.secondary {
+            background: white;
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+        
+        .nav-btn.secondary:hover:not(:disabled) {
+            background: #f0fdf4;
+        }
+        
+        .nav-btn.primary {
+            background: #10b981;
+            color: white;
+            border: 2px solid #10b981;
+        }
+        
+        .nav-btn.primary:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        /* ========== FOOTER ========== */
+        .footer {
+            background: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+            margin-top: auto;
+        }
+        
+        .footer-message {
+            color: #10b981;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .copyright {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .flashcard {
+                min-height: 350px;
+                padding: 30px 20px;
+            }
+            
+            .german-word {
+                font-size: 36px;
+            }
+            
+            .romanian-word {
+                font-size: 24px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">ʚଓ</span>
+                <span>Flashcards - Genul Neutru</span>
+            </div>
+            <a href="index.html" class="back-btn">← Înapoi la lecție</a>
+        </div>
+    </div>
+
+    <!-- CONTAINER -->
+    <div class="container">
+        
+        <!-- INFO BOX -->
+        <div class="info-box">
+            <h2>🎴 Învață substantivele neutre</h2>
+            <p>Click pe card pentru traducere. Click pe 🔊 pentru pronunție. Taste: ← → (navigare), Space (flip), S (audio)</p>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="progress-info">
+            <div class="progress-text" id="progressText">Card 1 din 55</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 1.8%"></div>
+            </div>
+        </div>
+
+        <!-- FLASHCARD -->
+        <div class="flashcard-container">
+            <div class="flashcard" id="flashcard" onclick="flipCard()">
+                <!-- Audio Button -->
+                <button class="audio-btn" onclick="speakWord(event)">🔊</button>
+                
+                <!-- Front Face -->
+                <div class="card-face card-front">
+                    <div class="german-word" id="germanWord">das Mädchen</div>
+                    <div class="termination-badge" id="termination">Terminația: -chen</div>
+                    <div class="tap-hint">Click pentru traducere</div>
+                </div>
+                
+                <!-- Back Face -->
+                <div class="card-face card-back">
+                    <div class="romanian-word" id="romanianWord">fata</div>
+                    <div class="tap-hint">Click pentru înapoi</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVIGATION -->
+        <div class="navigation">
+            <button class="nav-btn secondary" id="prevBtn" onclick="prevCard()">
+                ← Anterior
+            </button>
+            <button class="nav-btn primary" id="nextBtn" onclick="nextCard()">
+                Următorul →
+            </button>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footer-message">Mult succes la învățare! 🌻</div>
+        <div class="copyright">© 2026 Claudia Toth - Curs autorizat de limba germană</div>
+    </div>
+
+    <script>
+        // ========== FLASHCARDS DATA ==========
+        const flashcards = [
+            // Diminutive -chen (10 cards)
+            { german: 'das Mädchen', romanian: 'fata', termination: '-chen' },
+            { german: 'das Brötchen', romanian: 'chifla', termination: '-chen' },
+            { german: 'das Häuschen', romanian: 'căsuța', termination: '-chen' },
+            { german: 'das Kätzchen', romanian: 'pisicuța', termination: '-chen' },
+            { german: 'das Märchen', romanian: 'povestea', termination: '-chen' },
+            { german: 'das Tischchen', romanian: 'măsuța', termination: '-chen' },
+            { german: 'das Blümchen', romanian: 'floarea mică', termination: '-chen' },
+            { german: 'das Hündchen', romanian: 'cățelușul', termination: '-chen' },
+            { german: 'das Bäumchen', romanian: 'copăcelul', termination: '-chen' },
+            { german: 'das Herzchen', romanian: 'inimioară', termination: '-chen' },
+            
+            // Diminutive -lein (5 cards)
+            { german: 'das Fräulein', romanian: 'domnișoara', termination: '-lein' },
+            { german: 'das Tischlein', romanian: 'măsuța', termination: '-lein' },
+            { german: 'das Büchlein', romanian: 'cărticica', termination: '-lein' },
+            { german: 'das Vöglein', romanian: 'păsărica', termination: '-lein' },
+            { german: 'das Kindlein', romanian: 'copilașul', termination: '-lein' },
+            
+            // Terminații -ment (5 cards)
+            { german: 'das Dokument', romanian: 'documentul', termination: '-ment' },
+            { german: 'das Instrument', romanian: 'instrumentul', termination: '-ment' },
+            { german: 'das Argument', romanian: 'argumentul', termination: '-ment' },
+            { german: 'das Element', romanian: 'elementul', termination: '-ment' },
+            { german: 'das Monument', romanian: 'monumentul', termination: '-ment' },
+            
+            // Terminații -ett (5 cards)
+            { german: 'das Tablett', romanian: 'tava', termination: '-ett' },
+            { german: 'das Ballett', romanian: 'baletul', termination: '-ett' },
+            { german: 'das Kabinett', romanian: 'cabinetul', termination: '-ett' },
+            { german: 'das Parkett', romanian: 'parchetul', termination: '-ett' },
+            { german: 'das Skelett', romanian: 'scheletul', termination: '-ett' },
+            
+            // Terminații -ma (5 cards)
+            { german: 'das Thema', romanian: 'tema', termination: '-ma' },
+            { german: 'das Drama', romanian: 'drama', termination: '-ma' },
+            { german: 'das Klima', romanian: 'clima', termination: '-ma' },
+            { german: 'das Schema', romanian: 'schema', termination: '-ma' },
+            { german: 'das Komma', romanian: 'virgula', termination: '-ma' },
+            
+            // Terminații -um (5 cards neutre + 3 excepții)
+            { german: 'das Museum', romanian: 'muzeul', termination: '-um (neutru)' },
+            { german: 'das Zentrum', romanian: 'centrul', termination: '-um (neutru)' },
+            { german: 'das Datum', romanian: 'data', termination: '-um (neutru)' },
+            { german: 'das Album', romanian: 'albumul', termination: '-um (neutru)' },
+            { german: 'das Studium', romanian: 'studiul', termination: '-um (neutru)' },
+            { german: 'der Raum', romanian: 'spațiul (EXCEPȚIE!)', termination: '-um (masculin!)' },
+            { german: 'der Baum', romanian: 'copacul (EXCEPȚIE!)', termination: '-um (masculin!)' },
+            { german: 'der Traum', romanian: 'visul (EXCEPȚIE!)', termination: '-um (masculin!)' },
+            
+            // Terminații -tum (3 neutre + 2 excepții)
+            { german: 'das Christentum', romanian: 'creștinismul', termination: '-tum (neutru)' },
+            { german: 'das Eigentum', romanian: 'proprietatea', termination: '-tum (neutru)' },
+            { german: 'das Wachstum', romanian: 'creșterea', termination: '-tum (neutru)' },
+            { german: 'der Reichtum', romanian: 'bogăția (EXCEPȚIE!)', termination: '-tum (masculin!)' },
+            { german: 'der Irrtum', romanian: 'eroarea (EXCEPȚIE!)', termination: '-tum (masculin!)' },
+            
+            // Terminații -nis (5 neutre + 4 excepții)
+            { german: 'das Ergebnis', romanian: 'rezultatul', termination: '-nis (neutru)' },
+            { german: 'das Geheimnis', romanian: 'secretul', termination: '-nis (neutru)' },
+            { german: 'das Hindernis', romanian: 'obstacolul', termination: '-nis (neutru)' },
+            { german: 'das Bedürfnis', romanian: 'nevoia', termination: '-nis (neutru)' },
+            { german: 'das Ereignis', romanian: 'evenimentul', termination: '-nis (neutru)' },
+            { german: 'die Erlaubnis', romanian: 'permisiunea (EXCEPȚIE!)', termination: '-nis (feminin!)' },
+            { german: 'die Kenntnis', romanian: 'cunoștința (EXCEPȚIE!)', termination: '-nis (feminin!)' },
+            { german: 'die Wildnis', romanian: 'sălbăticia (EXCEPȚIE!)', termination: '-nis (feminin!)' },
+            { german: 'die Finsternis', romanian: 'întunericul (EXCEPȚIE!)', termination: '-nis (feminin!)' },
+            
+            // Infinitive substantivizate (10 cards)
+            { german: 'das Lesen', romanian: 'cititul', termination: 'Infinitiv' },
+            { german: 'das Schreiben', romanian: 'scrisul', termination: 'Infinitiv' },
+            { german: 'das Essen', romanian: 'mâncatul', termination: 'Infinitiv' },
+            { german: 'das Tanzen', romanian: 'dansatul', termination: 'Infinitiv' },
+            { german: 'das Lernen', romanian: 'învățatul', termination: 'Infinitiv' },
+            { german: 'das Schwimmen', romanian: 'înotul', termination: 'Infinitiv' },
+            { german: 'das Singen', romanian: 'cântatul', termination: 'Infinitiv' },
+            { german: 'das Spielen', romanian: 'jocul', termination: 'Infinitiv' },
+            { german: 'das Arbeiten', romanian: 'munca', termination: 'Infinitiv' },
+            { german: 'das Reisen', romanian: 'călătoria', termination: 'Infinitiv' }
+        ];
+
+        // ========== STATE ==========
+        let currentIndex = 0;
+        let isFlipped = false;
+
+        // ========== TEXT-TO-SPEECH ==========
+        function speakWord(event) {
+            event.stopPropagation(); // Prevent card flip
+            
+            const card = flashcards[currentIndex];
+            const germanWord = card.german;
+            
+            // Check if browser supports Speech Synthesis
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                // Create speech
+                const utterance = new SpeechSynthesisUtterance(germanWord);
+                utterance.lang = 'de-DE'; // German language
+                utterance.rate = 0.8; // Slower for learning
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                // Speak
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('Browser-ul tău nu suportă Text-to-Speech. Încearcă Chrome, Edge sau Safari.');
+            }
+        }
+
+        // ========== DISPLAY CARD ==========
+        function displayCard() {
+            const card = flashcards[currentIndex];
+            
+            document.getElementById('germanWord').textContent = card.german;
+            document.getElementById('termination').textContent = `Terminația: ${card.termination}`;
+            document.getElementById('romanianWord').textContent = card.romanian;
+            document.getElementById('progressText').textContent = `Card ${currentIndex + 1} din ${flashcards.length}`;
+            
+            const percentage = ((currentIndex + 1) / flashcards.length) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            
+            // Reset flip
+            if (isFlipped) {
+                document.getElementById('flashcard').classList.remove('flipped');
+                isFlipped = false;
+            }
+            
+            // Update buttons
+            document.getElementById('prevBtn').disabled = (currentIndex === 0);
+            document.getElementById('nextBtn').disabled = (currentIndex === flashcards.length - 1);
+        }
+
+        // ========== FLIP CARD ==========
+        function flipCard() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        }
+
+        // ========== NAVIGATION ==========
+        function nextCard() {
+            if (currentIndex < flashcards.length - 1) {
+                currentIndex++;
+                displayCard();
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                displayCard();
+            }
+        }
+
+        // ========== KEYBOARD NAVIGATION ==========
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') {
+                nextCard();
+            } else if (e.key === 'ArrowLeft') {
+                prevCard();
+            } else if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                flipCard();
+            } else if (e.key === 's' || e.key === 'S') {
+                speakWord(e);
+            }
+        });
+
+        // ========== INITIALIZE ==========
+        displayCard();
+    </script>
+
+</body>
+</html>
