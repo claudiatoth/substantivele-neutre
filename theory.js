@@ -55,6 +55,21 @@ const theoryHTML = `
                 <h4>💡 Avantaj cheie</h4>
                 <p><strong>Nominativ = Akkusativ identic</strong> (ambele „das")! Față de masculin (der → den), neutrul e cel mai simplu caz.</p>
             </div>
+
+            <div class="theory-box" style="background: #ecfdf5; border-color: #10b981;">
+                <h4>🔤 Atenție: substantivele se învață cu Sg + PLURAL — nu doar cu articolul</h4>
+                <p>Lecția de față se concentrează pe <strong>terminațiile care indică genul neutru</strong>. Substantivele din tabelele de mai jos apar cu articolul lor (<em>das ...</em>) — DAR pentru fiecare cuvânt trebuie să înveți și <strong>forma de plural</strong>, pentru că pluralul german e <em>imprevizibil</em>.</p>
+                <p style="margin-top: 8px;">Exemple frecvente cu Sg+Pl pe care le-ai întâlnit deja:</p>
+                <ul style="margin-left: 18px;">
+                    <li><strong>das Kind · die Kinder</strong> <span class="ro-translation">(copilul · copiii)</span></li>
+                    <li><strong>das Buch · die Bücher</strong> <span class="ro-translation">(cartea · cărțile, cu Umlaut!)</span></li>
+                    <li><strong>das Auto · die Autos</strong> <span class="ro-translation">(mașina · mașinile, plural cu -s)</span></li>
+                    <li><strong>das Mädchen · die Mädchen</strong> <span class="ro-translation">(fata · fetele — plural identic, tipic la -chen)</span></li>
+                    <li><strong>das Wasser</strong> <span class="ro-translation">(apa — sg tantum în uz comun; pluralul „die Wässer" doar pentru tipuri specifice)</span></li>
+                </ul>
+                <p style="margin-top: 8px;"><strong>Tipare frecvente la neutru:</strong> -chen / -lein → plural identic (Mädchen/Mädchen); -um → -en (Visum/Visa); monosilabice → -er + Umlaut (Buch/Bücher, Haus/Häuser). Verifică pe <a href="https://de.pons.com/deklination/deutsch" target="_blank" style="color: #047857;">PONS</a>.</p>
+                <p style="margin-top: 8px;">🎯 <strong>Infinitivele substantivate</strong> (das Lernen, das Lesen) sunt MEREU sg tantum în uz comun — acțiunile abstracte nu se pluralizează.</p>
+            </div>
         </div>
     </div>
 
